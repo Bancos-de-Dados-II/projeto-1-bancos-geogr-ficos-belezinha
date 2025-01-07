@@ -85,11 +85,11 @@ let marker = L.marker(center, {
 }).addTo(map);
 
 // Atualiza a posição do mapa e do marcador com base na localização do dispositivo
-// map.locate();
-// map.on('locationfound', e => {
-//     map.panTo(e.latlng);
-//     marker.setLatLng(e.latlng);
-// });
+ map.locate();
+ map.on('locationfound', e => {
+     map.panTo(e.latlng);
+     marker.setLatLng(e.latlng);
+ });
 
 // Função para salvar as coordenadas no banco
 // async function saveLocation(lat, lng) {
@@ -118,6 +118,10 @@ let marker = L.marker(center, {
 marker.on('moveend', () => {
     const position = marker.getLatLng(); // Obtem a posição atual do marcador
     console.log(`Posição do marcador: Latitude: ${position.lat}, Longitude: ${position.lng}`);
+   //pegando a latitude e longitude e jogando no campo do form 
+    const latitude = document.getElementById('latitude').value = position.lat;
+    const longitude = document.getElementById('longitude').value = position.lng;
+    
 });
 
 // Botão de busca por endereço
@@ -142,11 +146,16 @@ document.getElementById('search-btn').addEventListener('click', async () => {
 });
 
 // Botão para salvar localização
-document.getElementById('save-btn').addEventListener('click', () => {
-    const position = marker.getLatLng(); // Obtem a posição atual do marcador
-    console.log(position)
-    saveLocation(position.lat, position.lng); // Salva no banco
+// document.getElementById('save-btn').addEventListener('click', () => {
+//     const position = marker.getLatLng(); // Obtem a posição atual do marcador
+//     console.log(position)
+//     saveLocation(position.lat, position.lng); // Salva no banco
+// });
+
+document.getElementById('imovelForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    console.log('Título:', document.getElementById('titulo').value);
+    alert('Formulário enviado com sucesso!');
+    e.target.reset();
 });
-
-
        

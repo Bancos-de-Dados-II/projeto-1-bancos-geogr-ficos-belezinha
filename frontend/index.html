@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
     crossorigin=""/>
+    <link rel="stylesheet" href="styles/formStyle.css">
      <!-- Make sure you put this AFTER Leaflet's CSS -->
    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
@@ -27,10 +28,10 @@
     </style>
 </head>
 <body>
-    <div>
+    
         <input type="text" id="search" placeholder="Digite um endereço" />
        <button id="search-btn">Buscar</button>
-     
+    <!-- <div> 
        <form id="imovel-form" style="display: none;">
         <label for="nome">Nome:</label>
         <input type="text" id="nome" required>
@@ -41,11 +42,56 @@
         <button type="button" id="save-imovel-btn">Salvar Imóvel</button>
         </form>
  
-    </div>
+    </div> -->
     <div class="div-map">
         <div id="map"></div>
 
     </div>
+
+    <div class="form-container">
+        <h1>Cadastro de Imóvel</h1>
+        <form id="imovelForm">
+            <div class="form-group">
+                <label for="titulo">Título</label>
+                <input type="text" id="titulo" name="titulo" required>
+            </div>
+
+            <div class="form-group">
+                <label for="nome">Nome</label>
+                <input type="text" id="nome" name="nome" required>
+            </div>
+
+            <div class="form-group">
+                <label for="descricao">Descrição</label>
+                <textarea id="descricao" name="descricao" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="valor">Valor</label>
+                <input type="number" id="valor" name="valor" required>
+            </div>
+
+            <div class="form-group">
+                <label for="contato">Contato</label>
+                <input type="text" id="contato" name="contato" required>
+            </div>
+
+            <div class="form-group">
+                <label for="latitude">Latitude</label>
+                <input type="number" id="latitude" name="latitude"required disabled>
+            </div>
+
+            <div class="form-group">
+                <label for="longitude">Longitude</label>
+                <input type="number" id="longitude" name="longitude"required disabled>
+            </div>
+
+            <button type="submit" class="btn-submit">Enviar</button>
+        </form>
+    </div>
+
+
+
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="script.js" defer></script>
 
