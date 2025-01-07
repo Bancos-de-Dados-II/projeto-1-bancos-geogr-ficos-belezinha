@@ -1,11 +1,21 @@
 .form-container {
     background: #fff;
-    padding: 20px;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 400px;
+    width: 500px;
+    margin: 10px;
 }
-
+#imovelForm{
+   display: flex;
+   width:280px;
+   flex-direction: column;
+   
+}
 .form-container h1 {
     margin-bottom: 20px;
     font-size: 1.5rem;
@@ -15,6 +25,7 @@
 
 .form-group {
     margin-bottom: 15px;
+    width: 260px;
 }
 
 .form-group label {

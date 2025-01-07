@@ -13,6 +13,10 @@ app.get("/imovel",(req, res)=> {
    
 })
 
+app.get('/', (req, res) => {
+    res.send('Hello, Express!');
+});
+
 
 app.listen(3000, ()=> {
     console.log("servidor Rodando")
