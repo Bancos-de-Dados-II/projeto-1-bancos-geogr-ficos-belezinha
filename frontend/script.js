@@ -29,12 +29,14 @@ let marker = L.marker(center, {
 //load icones
 async function loadLocations() {
     try {
-        const response = await fetch('/api/get-locations');
+        const response = await fetch('http://localhost:3000/api/imoveis');
+
+        console.log(response)
         const locations = await response.json();
 
         // Adiciona um marcador para cada localização
         locations.forEach(location => {
-            const { latitude, longitude, titulo } = location;
+            const { latitude, longitude, titulo,nome, descricao, contato, valor } = location;
 
             // Cria o marcador
             const marker = L.marker([latitude, longitude], {
@@ -44,8 +46,21 @@ async function loadLocations() {
                 })
             }).addTo(map);
 
-            // Adiciona um popup com o título
-            marker.bindPopup(`<b>${titulo}</b>`).openPopup();
+            marker.bindTooltip(titulo, {
+                permanent: true, // Sempre visível
+                direction: 'top', // Acima do marcador
+                className: 'custom-tooltip' // Classe CSS para estilizar
+            });
+
+            // Adiciona o popup (detalhes ao clicar)
+            const popupContent = `
+                <b>${titulo}</b><br>
+                <p><strong>Nome:</strong> ${nome}</p>
+                <p><strong>Descrição:</strong> ${descricao}</p>
+                <p><strong>Valor:</strong> R$ ${valor.toFixed(2)}</p>
+                <p><strong>Contato:</strong> ${contato}</p>
+            `;
+            marker.bindPopup(popupContent);
         });
     } catch (error) {
         console.error('Erro ao carregar localizações:', error);

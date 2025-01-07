@@ -17,4 +17,15 @@ constructor(){}
             await prisma.$disconnect();
         }
     }
+    async buscarImoveis(){
+        try {
+            const res = await prisma.imovel.findMany();
+            return res;
+        } catch (error) {
+            console.error("Erro ao criar imóvel:", error);
+            throw error;
+        } finally {
+            await prisma.$disconnect();
+        }
+    }
 }
