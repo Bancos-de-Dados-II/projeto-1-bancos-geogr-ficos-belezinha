@@ -19,16 +19,16 @@ export default class Imovel{
 //         this.longitude = longitude
 constructor(){}
     
-    async criarImovel(){
+    async criarImovel(data){
         
-        const res = await prisma.imovel.create({data: {titulo:"Casa para alugar" ,  
-            nome: "Manoel Da Silva" ,
-            descricao: "Casa para alugar com 4 quartos" , 
-            valor: 500 ,
-            contato: "99899989",
-            latitude:-6.84249319266054 ,   
-            longitude:  -38.3474349975586}})
-
-        return res
+        try {
+            const res = await prisma.imovel.create({ data });
+            return res;
+        } catch (error) {
+            console.error("Erro ao criar imóvel:", error);
+            throw error;
+        } finally {
+            await prisma.$disconnect();
+        }
     }
 }

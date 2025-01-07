@@ -1,21 +1,9 @@
 import express from "express"
-import Imovel from "./src/model/Imovel"
+import imovelRoutes from "./routes/imovelRoutes.js"
 const app = express()
+app.use(express.json());
+app.use('/api/imoveis', imovelRoutes);
 
-
-app.get("/imovel",(req, res)=> {
-    console.log("rota get")
-    const imovel = new Imovel()
-    const re = imovel.criarImovel()
-    res.json(re)
-
-
-   
-})
-
-app.get('/', (req, res) => {
-    res.send('Hello, Express!');
-});
 
 
 app.listen(3000, ()=> {
