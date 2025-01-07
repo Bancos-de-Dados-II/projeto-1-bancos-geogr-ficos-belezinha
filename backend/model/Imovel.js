@@ -2,21 +2,7 @@ import {  PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient()
 
 export default class Imovel{
-     
-//    constructor(titulo ,  
-//     nome ,
-//     descricao , 
-//     valor ,
-//     contato ,
-//     latitude ,   
-//     longitude){
-//         this.titulo = titulo
-//         this.nome = nome
-//         this.descricao =descricao
-//         this.valor = valor
-//         this.contato = contato
-//         this.latitude = latitude
-//         this.longitude = longitude
+
 constructor(){}
     
     async criarImovel(data){

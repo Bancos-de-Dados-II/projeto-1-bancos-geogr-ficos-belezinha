@@ -1,64 +1,3 @@
-// let center = [-6.888744873962035, -38.56063094900568];
-//         var map = L.map('map').setView(center, 14);
-//         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-//             maxZoom: 19,
-//             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-//         }).addTo(map);
-        
-//         var myIcon = L.icon({
-//             iconUrl: 'https://cdn-icons-png.flaticon.com/256/5310/5310672.png',
-//             iconSize: [40, 40]
-//         });
-        
-//         let marker = L.marker(center,{
-//             draggable:true,
-//             title: 'Meu evento',
-//             icon: myIcon
-//         }).addTo(map);
-//         map.locate();
-//         map.on('locationfound', e=>{
-//             map.panTo(e.latlng);
-//             marker.setLatLng(e.latlng);
-//         });
-
-
-
-//         document.getElementById('search-btn').addEventListener('click', async () => {
-//             let marker = L.marker(center,{
-//                 draggable:true,
-//                 title: 'Meu evento',
-//                 icon: myIcon
-//             }).addTo(map);
-//             const query = document.getElementById('search').value;
-//             const response = await fetch(
-//               `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json`
-//             );
-//             const data = await response.json();
-      
-//             if (data.length > 0) {
-//               const { lat, lon, display_name } = data[0];
-//               map.setView([lat, lon], 15); // Centralizar no resultado
-//               L.marker([lat, lon]).addTo(map).bindPopup(display_name).openPopup();
-//               map.on('locationfound', e=>{
-//                 map.panTo(e.latlng);
-//                 console.log(map.panTo(e.latlng))
-//                 marker.setLatLng(e.latlng);
-//             });
-    
-//             map.on('locationerror', e=>{
-//                 console.log('Localização não encontrada');
-//             });
-        
-//             map.on('click', e =>{
-//                 marker.setLatLng(e.latlng);
-
-//                 const log = pointToLatLng(e.latlng)
-//                 console.log(log)
-//             });
-//             } else {
-//               alert('Localização não encontrada.');
-//             }
-//           });
 
 
 
@@ -84,6 +23,36 @@ let marker = L.marker(center, {
     icon: myIcon
 }).addTo(map);
 
+
+
+
+//load icones
+async function loadLocations() {
+    try {
+        const response = await fetch('/api/get-locations');
+        const locations = await response.json();
+
+        // Adiciona um marcador para cada localização
+        locations.forEach(location => {
+            const { latitude, longitude, titulo } = location;
+
+            // Cria o marcador
+            const marker = L.marker([latitude, longitude], {
+                icon: L.icon({
+                    iconUrl: 'https://cdn-icons-png.flaticon.com/256/5310/5310672.png',
+                    iconSize: [40, 40]
+                })
+            }).addTo(map);
+
+            // Adiciona um popup com o título
+            marker.bindPopup(`<b>${titulo}</b>`).openPopup();
+        });
+    } catch (error) {
+        console.error('Erro ao carregar localizações:', error);
+    }
+}
+
+loadLocations();
 // Atualiza a posição do mapa e do marcador com base na localização do dispositivo
 //  map.locate();
 //  map.on('locationfound', e => {
@@ -92,7 +61,7 @@ let marker = L.marker(center, {
 //  });
 
 // Função para salvar as coordenadas no banco
-async function saveLocation(lat, lng) {
+async function saveLocation(lat, lng, dados) {
     try {
         // Substitua esta URL pela sua API para salvar os dados no banco
         const response = await fetch('/api/save-location', {
@@ -100,7 +69,7 @@ async function saveLocation(lat, lng) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ latitude: lat, longitude: lng }),
+            body: JSON.stringify({ latitude: lat, longitude: lng , dados}),
         });
 
         if (response.ok) {
@@ -113,11 +82,50 @@ async function saveLocation(lat, lng) {
         alert('Erro ao salvar localização.');
     }
 }
+// function guardarLoc(p1, p2){
+
+// }
+let p1;
+let p2;
+
+let titulo
+let nome
+let descricao
+let valor 
+let contato
+
+document.getElementById('imovelForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+     titulo = document.getElementById('titulo').value;
+     nome = document.getElementById('nome').value;
+     descricao = document.getElementById('descricao').value;
+     valor = document.getElementById('valor').value;
+     contato = document.getElementById('contato').value;
+
+    console.log('Dados do formulário:', { titulo, nome, descricao, valor, contato });
+    alert('Formulário enviado com sucesso!');
+    marker.bindPopup(`Contato:${ contato }, ${titulo}`).openPopup();
+    e.target.reset();
+});     
+
+
+
 
 // Evento para capturar a posição final do marcador após ser movido
-marker.on('moveend', () => {
+marker.on('click', () => {
     const position = marker.getLatLng(); // Obtem a posição atual do marcador
     console.log(`Posição do marcador: Latitude: ${position.lat}, Longitude: ${position.lng}`);
+
+    p1= position.lat;
+    p2 = position.lng;
+
+    console.log(p1, p2,"p1 e p2")
+    const dados = {titulo,nome,descricao,valor, contato}
+
+    console.log(dados)
+   if(dados){
+    saveLocation(position.lat, position.lng, dados);
+   }
    //pegando a latitude e longitude e jogando no campo do form 
     // const latitude = document.getElementById('latitude').value = position.lat;
     // const longitude = document.getElementById('longitude').value = position.lng;
@@ -146,16 +154,11 @@ document.getElementById('search-btn').addEventListener('click', async () => {
 });
 
 // Botão para salvar localização
-document.getElementById('save-btn').addEventListener('click', () => {
-    const position = marker.getLatLng(); // Obtem a posição atual do marcador
-    console.log(position)
-    saveLocation(position.lat, position.lng); // Salva no banco
-});
+// document.getElementById('save-btn').addEventListener('click', () => {
+//     const position = marker.getLatLng(); // Obtem a posição atual do marcador
+//     console.log(position)
+//     saveLocation(position.lat, position.lng); // Salva no banco
+// });
 
-document.getElementById('imovelForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-    console.log('Título:', document.getElementById('titulo').value);
-    alert('Formulário enviado com sucesso!');
-    e.target.reset();
-});
-       
+//form
+
