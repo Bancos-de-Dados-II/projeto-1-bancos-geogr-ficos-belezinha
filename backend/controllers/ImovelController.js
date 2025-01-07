@@ -4,14 +4,16 @@ import Imovel from "../model/Imovel.js"
 export default class ImovelController{
     static async criarImovel(req, res){
         try {
-            const { titulo, nome, descricao, valor, contato, latitude, longitude } = req.body;
+
+            console.log(req.body,"dados no controller")
+            const { dados, latitude, longitude } = req.body;
             const imovel = new Imovel();
             const novoImovel = await imovel.criarImovel({
-                titulo,
-                nome,
-                descricao,
-                valor,
-                contato,
+                titulo:dados.titulo,
+                nome:dados.nome,
+                descricao:dados.descricao,
+                valor:parseInt(dados.valor),
+                contato:dados.contato,
                 latitude,
                 longitude,
             });
@@ -21,4 +23,5 @@ export default class ImovelController{
             res.status(500).json({ error: error.message });
         }
     }
+    
 }

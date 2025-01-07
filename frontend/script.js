@@ -79,7 +79,7 @@ loadLocations();
 async function saveLocation(lat, lng, dados) {
     try {
         // Substitua esta URL pela sua API para salvar os dados no banco
-        const response = await fetch('/api/save-location', {
+        const response = await fetch('http://localhost:3000/api/imoveis', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
