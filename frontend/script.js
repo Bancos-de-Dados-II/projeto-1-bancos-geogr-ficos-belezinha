@@ -72,12 +72,92 @@ async function loadLocations() {
 loadLocations();
 
 //editar localização
-function editLocation(id) {
-    alert(`Editar localização com ID: ${id}`);
+// function editLocation(id) {
+//     alert(`Editar localização com ID: ${id}`);
+// }
 
+// Função para editar a localização
+async function editLocation(id) {
+    try {
+        // Buscar os dados do imóvel atual
+        const response = await fetch(`http://localhost:3000/api/imoveis`);
+        const locations = await response.json();
+        const imovel = locations.find(location => location.id === id);
 
+        if (!imovel) {
+            alert('Imóvel não encontrado!');
+            return;
+        }
 
+        // Preencher o formulário com os dados do imóvel
+        document.getElementById('imovelId').value = imovel.id;
+        document.getElementById('titulo').value = imovel.titulo;
+        document.getElementById('nome').value = imovel.nome;
+        document.getElementById('descricao').value = imovel.descricao;
+        document.getElementById('valor').value = imovel.valor;
+        document.getElementById('contato').value = imovel.contato;
 
+        alert('Você pode arrastar o marcador para alterar a localização do imóvel.');
+
+        // Adicionar marcador temporário no mapa para edição da localização
+        const tempMarker = L.marker([imovel.latitude, imovel.longitude], {
+            draggable: true,
+            icon: L.icon({
+                iconUrl: './img/home-address.png',
+                iconSize: [40, 40]
+            })
+        }).addTo(map);
+
+        // Capturar nova posição ao finalizar o arraste
+        let newLatitude = imovel.latitude;
+        let newLongitude = imovel.longitude;
+        tempMarker.on('dragend', () => {
+            const position = tempMarker.getLatLng();
+            newLatitude = position.lat;
+            newLongitude = position.lng;
+            alert(`Nova localização: Latitude: ${newLatitude}, Longitude: ${newLongitude}`);
+        });
+
+        // Atualizar os dados no backend ao enviar o formulário
+        document.getElementById('imovelForm').onsubmit = async function (e) {
+            e.preventDefault();
+
+            const titulo = document.getElementById('titulo').value;
+            const nome = document.getElementById('nome').value;
+            const descricao = document.getElementById('descricao').value;
+            const valor = parseFloat(document.getElementById('valor').value);
+            const contato = document.getElementById('contato').value;
+
+            const data = {
+                titulo,
+                nome,
+                descricao,
+                valor,
+                contato,
+                latitude: newLatitude,
+                longitude: newLongitude,
+            };
+
+            const responseUpdate = await fetch(`http://localhost:3000/api/imoveis/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (!responseUpdate.ok) {
+                alert('Erro ao atualizar imóvel.');
+                return;
+            }
+
+            alert('Imóvel atualizado com sucesso!');
+            location.reload();
+        };
+    } catch (error) {
+        console.error('Erro ao editar imóvel:', error);
+        alert('Erro ao editar imóvel.');
+    }
 }
 
 // Função para excluir a localização

@@ -37,4 +37,20 @@ constructor(){}
             throw error;
         }
     }
+
+    async editarImovel(id, data) {
+        try {
+            const res = await prisma.imovel.update({
+                where: { id },
+                data,
+            });
+            return res;
+        } catch (error) {
+            console.error("Erro ao editar imóvel:", error);
+            throw error;
+        } finally {
+            await prisma.$disconnect();
+        }
+    }
+    
 }
