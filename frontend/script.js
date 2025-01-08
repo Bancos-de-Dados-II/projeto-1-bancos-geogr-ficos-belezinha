@@ -12,7 +12,7 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 // Define o ícone personalizado
 var myIcon = L.icon({
-    iconUrl: 'https://cdn-icons-png.flaticon.com/256/5310/5310672.png',
+    iconUrl: './img/home-address.png',
     iconSize: [40, 40]
 });
 
@@ -41,7 +41,7 @@ async function loadLocations() {
             // Cria o marcador
             const marker = L.marker([latitude, longitude], {
                 icon: L.icon({
-                    iconUrl: 'https://cdn-icons-png.flaticon.com/256/5310/5310672.png',
+                    iconUrl: './img/home-address.png',
                     iconSize: [40, 40]
                 })
             }).addTo(map);
@@ -59,6 +59,8 @@ async function loadLocations() {
                 <p><strong>Descrição:</strong> ${descricao}</p>
                 <p><strong>Valor:</strong> R$ ${valor.toFixed(2)}</p>
                 <p><strong>Contato:</strong> ${contato}</p>
+                <button onclick="editLocation(${location.id})">Editar</button>
+                <button onclick="deleteLocation(${location.id})">Excluir</button>
             `;
             marker.bindPopup(popupContent);
         });
@@ -68,6 +70,25 @@ async function loadLocations() {
 }
 
 loadLocations();
+
+//editar localização
+function editLocation(id) {
+    alert(`Editar localização com ID: ${id}`);
+
+
+
+
+}
+
+// Função para excluir a localização
+function deleteLocation(id) {
+    const confirmDelete = confirm(`Tem certeza que deseja excluir a localização com ID: ${id}?`);
+    if (confirmDelete) {
+        alert(`Localização com ID: ${id} excluída.`);
+        // Adicione aqui a lógica para remover do banco e atualizar o mapa
+    }
+}
+
 // Atualiza a posição do mapa e do marcador com base na localização do dispositivo
 //  map.locate();
 //  map.on('locationfound', e => {
@@ -79,19 +100,26 @@ loadLocations();
 async function saveLocation(lat, lng, dados) {
     try {
         // Substitua esta URL pela sua API para salvar os dados no banco
-        const response = await fetch('http://localhost:3000/api/imoveis', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ latitude: lat, longitude: lng , dados}),
-        });
-
-        if (response.ok) {
-            alert('Localização salva com sucesso!');
-        } else {
-            alert('Erro ao salvar localização.');
+        if( !dados.titulo || !dados.nome || !dados.contato || !dados.descricao || !dados.valor){
+            alert('Preencha os dados do cadasdro do imovel.');
         }
+        else{
+
+            const response = await fetch('http://localhost:3000/api/imoveis', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ latitude: lat, longitude: lng , dados}),
+            });
+    
+            if (response.ok) {
+                alert('Localização salva com sucesso!');
+            } else {
+                alert('Erro ao salvar localização.');
+            }
+        }
+        console.log(lat, lng, dados)
     } catch (error) {
         console.error('Erro ao salvar localização:', error);
         alert('Erro ao salvar localização.');
@@ -119,6 +147,7 @@ document.getElementById('imovelForm').addEventListener('submit', (e) => {
 
     console.log('Dados do formulário:', { titulo, nome, descricao, valor, contato });
     alert('Formulário enviado com sucesso!');
+    alert('Escolha a Localizacao Do imovel no map e clique para salvar');
     marker.bindPopup(`Contato:${ contato }, ${titulo}`).openPopup();
     e.target.reset();
 });     
@@ -137,10 +166,17 @@ marker.on('click', () => {
     console.log(p1, p2,"p1 e p2")
     const dados = {titulo,nome,descricao,valor, contato}
 
-    console.log(dados)
-   if(dados){
-    saveLocation(position.lat, position.lng, dados);
-   }
+    console.log(typeof dados)
+   if(!dados.titulo){
+       alert("Preencha os dados ")
+    }
+    else{
+
+        saveLocation(position.lat, position.lng, dados);
+        // Recarregar a página
+        location.reload();
+
+    }
    //pegando a latitude e longitude e jogando no campo do form 
     // const latitude = document.getElementById('latitude').value = position.lat;
     // const longitude = document.getElementById('longitude').value = position.lng;

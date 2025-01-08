@@ -5,6 +5,7 @@
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
     crossorigin=""/>
     <link rel="stylesheet" href="styles/formStyle.css">
+    <link rel="stylesheet" href="styles/style.css">
      <!-- Make sure you put this AFTER Leaflet's CSS -->
    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
@@ -14,19 +15,25 @@
     <title>Document</title>
     <style>
         #map {
-             height: 400px;
-              width: 600px;
+             height: 800px;
+              width: 1500px;
             }
         .div-map{
             display: flex;
-            width: 100%;
-            height: 800px;
+            flex-direction: column;
+            width: auto;
+            height: 80%;
             justify-content: center;
             align-items: center;
         }
         .container{
             width: 100%;
+            height: 100%;
             display: flex;
+        }
+        body{
+            height: 100%;
+            
         }
     </style>
 </head>
@@ -69,12 +76,12 @@
          <button type="submit" class="btn-submit">Cadastrar Dados</button>
      </form>
  </div>
- <div class="buscar-localizacao">
-    <h4>Buscar Localização</h4>
-    <input type="text" id="search" placeholder="Digite um endereço" />
-    <button id="search-btn">Buscar</button>
-   </div>
  <div class="div-map">
+     <div class="buscar-localizacao">
+        <h4>Buscar Localização</h4>
+        <input type="text" id="search" placeholder="Digite um endereço" />
+        <button id="search-btn">Buscar</button>
+       </div>
      <div id="map"></div>
 
  </div>
