@@ -81,10 +81,26 @@ function editLocation(id) {
 }
 
 // Função para excluir a localização
-function deleteLocation(id) {
+async function deleteLocation(id) {
     const confirmDelete = confirm(`Tem certeza que deseja excluir a localização com ID: ${id}?`);
     if (confirmDelete) {
+        const res = await fetch(`http://localhost:3000/api/imoveis/${id}`,{
+            method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+        })
+
+        console.log(res, "res no script")
+
+        if(!res.ok){
+            alert("Erro ao excluir imovel")
+            return;
+        }
+        
         alert(`Localização com ID: ${id} excluída.`);
+        location.reload();
+
         // Adicione aqui a lógica para remover do banco e atualizar o mapa
     }
 }
