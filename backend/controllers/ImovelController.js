@@ -4,7 +4,7 @@ import Imovel from "../model/Imovel.js"
 export default class ImovelController{
     static async criarImovel(req, res){
         try {
-
+            
             console.log(req.body,"dados no controller")
             const { dados, latitude, longitude } = req.body;
             const imovel = new Imovel();

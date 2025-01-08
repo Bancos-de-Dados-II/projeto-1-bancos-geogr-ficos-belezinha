@@ -1,7 +1,7 @@
 
 
 
-let center = [-6.8426636313354, -38.34752082824708];
+let center = [-6.847126972470373, -38.3518660068512];
 
 // Inicializa o mapa centrado na localização definida
 var map = L.map('map').setView(center, 14);
@@ -37,7 +37,7 @@ async function loadLocations() {
         // Adiciona um marcador para cada localização
         locations.forEach(location => {
             const { latitude, longitude, titulo,nome, descricao, contato, valor } = location;
-
+            console.log(location.id,"id no map")
             // Cria o marcador
             const marker = L.marker([latitude, longitude], {
                 icon: L.icon({
@@ -45,13 +45,16 @@ async function loadLocations() {
                     iconSize: [40, 40]
                 })
             }).addTo(map);
+            
+           
 
             marker.bindTooltip(titulo, {
+                
                 permanent: true, // Sempre visível
                 direction: 'top', // Acima do marcador
                 className: 'custom-tooltip' // Classe CSS para estilizar
             });
-
+           
             // Adiciona o popup (detalhes ao clicar)
             const popupContent = `
                 <b>${titulo}</b><br>
@@ -61,6 +64,7 @@ async function loadLocations() {
                 <p><strong>Contato:</strong> ${contato}</p>
                 <button onclick="editLocation(${location.id})">Editar</button>
                 <button onclick="deleteLocation(${location.id})">Excluir</button>
+                <p>${location.id}</p>
             `;
             marker.bindPopup(popupContent);
         });
@@ -77,9 +81,16 @@ loadLocations();
 // }
 
 // Função para editar a localização
+const btnEdite =document.querySelector('.btn-submit2')
+const btnSubmit =document.querySelector('.btn-submit')
 async function editLocation(id) {
     try {
         // Buscar os dados do imóvel atual
+
+        btnEdite.classList.add('flex')
+        btnSubmit.classList.add('none')
+
+        console.log("editlocation")
         const response = await fetch(`http://localhost:3000/api/imoveis`);
         const locations = await response.json();
         const imovel = locations.find(location => location.id === id);
@@ -97,53 +108,70 @@ async function editLocation(id) {
         document.getElementById('valor').value = imovel.valor;
         document.getElementById('contato').value = imovel.contato;
 
-        alert('Você pode arrastar o marcador para alterar a localização do imóvel.');
+        // alert('Você pode arrastar o marcador para alterar a localização do imóvel.');
 
         // Adicionar marcador temporário no mapa para edição da localização
-        const tempMarker = L.marker([imovel.latitude, imovel.longitude], {
-            draggable: true,
-            icon: L.icon({
-                iconUrl: './img/home-address.png',
-                iconSize: [40, 40]
-            })
-        }).addTo(map);
-
-        // Capturar nova posição ao finalizar o arraste
-        let newLatitude = imovel.latitude;
-        let newLongitude = imovel.longitude;
-        tempMarker.on('dragend', () => {
-            const position = tempMarker.getLatLng();
-            newLatitude = position.lat;
-            newLongitude = position.lng;
-            alert(`Nova localização: Latitude: ${newLatitude}, Longitude: ${newLongitude}`);
-        });
-
+        
         // Atualizar os dados no backend ao enviar o formulário
-        document.getElementById('imovelForm').onsubmit = async function (e) {
+        btnEdite.addEventListener('click', async function (e) {
             e.preventDefault();
-
+            
             const titulo = document.getElementById('titulo').value;
             const nome = document.getElementById('nome').value;
             const descricao = document.getElementById('descricao').value;
             const valor = parseFloat(document.getElementById('valor').value);
             const contato = document.getElementById('contato').value;
-
+            
             const data = {
                 titulo,
                 nome,
                 descricao,
                 valor,
                 contato,
-                latitude: newLatitude,
-                longitude: newLongitude,
+                
+               
             };
-
-            const responseUpdate = await fetch(`http://localhost:3000/api/imoveis/${id}`, {
-                method: 'PUT',
-                headers: {
+            
+            alert('Formulário enviado com sucesso!');
+            alert('Escolha a Localizacao Do imovel no map e clique para salvar');
+           
+            const tempMarker = L.marker([imovel.latitude, imovel.longitude], {
+                draggable: true,
+                icon: L.icon({
+                    iconUrl: './img/home-address.png',
+                    iconSize: [40, 40]
+                })
+            }).addTo(map);
+            
+            tempMarker.bindTooltip(titulo, {
+                
+                permanent: true, // Sempre visível
+                direction: 'top', // Acima do marcador
+                className: 'custom-tooltip' // Classe CSS para estilizar
+            });
+          
+            console.log(id)
+            let idDelete = id
+            
+            tempMarker.on('click',async () => {
+                const position = tempMarker.getLatLng(); // Obtem a posição atual do marcador
+                console.log(`Posição do marcador: Latitude: ${position.lat}, Longitude: ${position.lng}`);
+            
+                
+               let urlEdite = `http://localhost:3000/api/imoveis/${id}`
+                console.log(p1, p2,"p1 e p2")
+                // const dados = {titulo,nome,descricao,valor, contato}
+            
+                console.log(data)
+              
+              
+                    alert("Deseja salvar nessa Localização?")
+                     const responseUpdate = await fetch(`http://localhost:3000/api/imoveis/${id}`, {
+                    method: 'PUT',
+                    headers: {
                     'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
+                    },
+                    body: JSON.stringify({ latitude: position.lat, longitude: position.lng , data}),
             });
 
             if (!responseUpdate.ok) {
@@ -152,8 +180,34 @@ async function editLocation(id) {
             }
 
             alert('Imóvel atualizado com sucesso!');
-            location.reload();
-        };
+            await loadLocations()
+            location.reload()
+                  
+        //    deleteLocation(idDelete)
+                    // Recarregar a página
+                   
+            
+               //pegando a latitude e longitude e jogando no campo do form 
+                // const latitude = document.getElementById('latitude').value = position.lat;
+                // const longitude = document.getElementById('longitude').value = position.lng;
+                // console.log(latitude, longitude)
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+            // location.reload();
+            
+           
+        });
     } catch (error) {
         console.error('Erro ao editar imóvel:', error);
         alert('Erro ao editar imóvel.');
@@ -185,24 +239,24 @@ async function deleteLocation(id) {
     }
 }
 
-// Atualiza a posição do mapa e do marcador com base na localização do dispositivo
-//  map.locate();
-//  map.on('locationfound', e => {
-//      map.panTo(e.latlng);
-//      marker.setLatLng(e.latlng);
-//  });
+//Atualiza a posição do mapa e do marcador com base na localização do dispositivo
+
 
 // Função para salvar as coordenadas no banco
-async function saveLocation(lat, lng, dados) {
+async function saveLocation(lat, lng, dados, metodo, url) {
     try {
+
+        console.log(url, metodo, "metodo no savelocation")
         // Substitua esta URL pela sua API para salvar os dados no banco
+       if(metodo ==="POST"){
         if( !dados.titulo || !dados.nome || !dados.contato || !dados.descricao || !dados.valor){
             alert('Preencha os dados do cadasdro do imovel.');
         }
+       }
       
 
-            const response = await fetch('http://localhost:3000/api/imoveis', {
-                method: 'POST',
+            const response = await fetch(url, {
+                method: `${metodo}`,
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -211,10 +265,14 @@ async function saveLocation(lat, lng, dados) {
             
 
             console.log(response,"Response")
-            if (response.ok) {
+            if(metodo === 'PUT'){
+                 alert('Localização salva com sucesso!');
+             }
+            if (response.ok && metodo==="POST") {
                 alert('Localização salva com sucesso!');
                 location.reload();
-            } else {
+            }
+             else {
                 alert('Erro ao salvar localização.');
             }
         
@@ -235,7 +293,7 @@ let nome
 let descricao
 let valor 
 let contato
-
+let marker1
 document.getElementById('imovelForm').addEventListener('submit', (e) => {
     e.preventDefault();
      titulo = document.getElementById('titulo').value;
@@ -247,15 +305,29 @@ document.getElementById('imovelForm').addEventListener('submit', (e) => {
     console.log('Dados do formulário:', { titulo, nome, descricao, valor, contato });
     alert('Formulário enviado com sucesso!');
     alert('Escolha a Localizacao Do imovel no map e clique para salvar');
+
+    // marker1 = L.icon({
+    //     iconUrl: './img/home-address.png',
+    //     iconSize: [40, 40]
+    // });
+    //  marker1 = L.marker(center, {
+    //     draggable: true,
+    //     title: 'Imovel',
+    //     icon: myIcon
+    // }).addTo(map);
+    
     marker.bindPopup(`Contato:${ contato }, ${titulo}`).openPopup();
     e.target.reset();
 });     
 
-
+let metodo = 'POST'
+let urlPost = 'http://localhost:3000/api/imoveis'
 
 
 // Evento para capturar a posição final do marcador após ser movido
 marker.on('click', () => {
+
+    console.log("cliquei")
     const position = marker.getLatLng(); // Obtem a posição atual do marcador
     console.log(`Posição do marcador: Latitude: ${position.lat}, Longitude: ${position.lng}`);
 
@@ -271,15 +343,13 @@ marker.on('click', () => {
     }
     else{
         alert("Deseja salvar nessa Localização?")
-        saveLocation(position.lat, position.lng, dados);
+        saveLocation(position.lat, position.lng, dados,metodo,urlPost);
         // Recarregar a página
+        location.reload()
        
 
     }
-   //pegando a latitude e longitude e jogando no campo do form 
-    // const latitude = document.getElementById('latitude').value = position.lat;
-    // const longitude = document.getElementById('longitude').value = position.lng;
-    // console.log(latitude, longitude)
+ 
 });
 
 // Botão de busca por endereço
@@ -303,12 +373,4 @@ document.getElementById('search-btn').addEventListener('click', async () => {
     }
 });
 
-// Botão para salvar localização
-// document.getElementById('save-btn').addEventListener('click', () => {
-//     const position = marker.getLatLng(); // Obtem a posição atual do marcador
-//     console.log(position)
-//     saveLocation(position.lat, position.lng); // Salva no banco
-// });
-
-//form
 
