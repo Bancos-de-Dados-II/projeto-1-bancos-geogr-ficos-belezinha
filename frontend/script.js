@@ -19,7 +19,7 @@ var myIcon = L.icon({
 // Adiciona o marcador inicial com a opção de arrastar (draggable)
 let marker = L.marker(center, {
     draggable: true,
-    title: 'Meu evento',
+    title: 'Imovel',
     icon: myIcon
 }).addTo(map);
 
@@ -103,7 +103,7 @@ async function saveLocation(lat, lng, dados) {
         if( !dados.titulo || !dados.nome || !dados.contato || !dados.descricao || !dados.valor){
             alert('Preencha os dados do cadasdro do imovel.');
         }
-        else{
+      
 
             const response = await fetch('http://localhost:3000/api/imoveis', {
                 method: 'POST',
@@ -112,13 +112,16 @@ async function saveLocation(lat, lng, dados) {
                 },
                 body: JSON.stringify({ latitude: lat, longitude: lng , dados}),
             });
-    
+            
+
+            console.log(response,"Response")
             if (response.ok) {
                 alert('Localização salva com sucesso!');
+                location.reload();
             } else {
                 alert('Erro ao salvar localização.');
             }
-        }
+        
         console.log(lat, lng, dados)
     } catch (error) {
         console.error('Erro ao salvar localização:', error);
@@ -171,10 +174,10 @@ marker.on('click', () => {
        alert("Preencha os dados ")
     }
     else{
-
+        alert("Deseja salvar nessa Localização?")
         saveLocation(position.lat, position.lng, dados);
         // Recarregar a página
-        location.reload();
+       
 
     }
    //pegando a latitude e longitude e jogando no campo do form 

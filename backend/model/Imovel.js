@@ -28,4 +28,13 @@ constructor(){}
             await prisma.$disconnect();
         }
     }
+    async delatarImovel(id){
+        try {
+            const res = await prisma.imovel.delete({where:{id:id}})
+            return res
+        } catch (error) {
+            console.error("Erro ao criar imóvel:", error);
+            throw error;
+        }
+    }
 }
