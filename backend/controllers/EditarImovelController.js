@@ -7,17 +7,17 @@ export default class EditarImovelController {
             console.log(req.body,"reqbody")
             // ID do imóvel a ser editado
             console.log(id, "id no controler edite")
-            const { titulo,nome, descricao,valor,contato, latitude, longitude } = req.body;
+            const { data, latitude, longitude } = req.body;
 
-            console.log("chegou no edite",titulo)
+            console.log("chegou no edite",data.titulo)
 
             const imovel = new Imovel();
             const imovelAtualizado = await imovel.editarImovel(id, {
-                titulo,
-                nome,
-                descricao,
-                valor,
-                contato,
+                titulo:data.titulo,
+                nome:data.nome,
+                descricao:data.descricao,
+                valor:data.valor,
+                contato:data.contato,
                 latitude,
                 longitude,
             });

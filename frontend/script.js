@@ -150,7 +150,7 @@ async function editLocation(id) {
                 className: 'custom-tooltip' // Classe CSS para estilizar
             });
           
-            console.log(id)
+            console.log(id, data, "id e data")
             let idDelete = id
             
             tempMarker.on('click',async () => {
@@ -162,7 +162,7 @@ async function editLocation(id) {
                 console.log(p1, p2,"p1 e p2")
                 // const dados = {titulo,nome,descricao,valor, contato}
             
-                console.log(data)
+                
               
               
                     alert("Deseja salvar nessa Localização?")
