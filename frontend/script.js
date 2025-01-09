@@ -246,17 +246,17 @@ async function deleteLocation(id) {
 async function saveLocation(lat, lng, dados, metodo, url) {
     try {
 
-        console.log(url, metodo, "metodo no savelocation")
+        console.log(url, metodo, dados, "metodo no savelocation")
         // Substitua esta URL pela sua API para salvar os dados no banco
-       if(metodo ==="POST"){
+       
         if( !dados.titulo || !dados.nome || !dados.contato || !dados.descricao || !dados.valor){
             alert('Preencha os dados do cadasdro do imovel.');
         }
-       }
-      
+       
+        
 
-            const response = await fetch(url, {
-                method: `${metodo}`,
+            const response = await fetch('http://localhost:3000/api/imoveis',{
+                method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -265,15 +265,13 @@ async function saveLocation(lat, lng, dados, metodo, url) {
             
 
             console.log(response,"Response")
-            if(metodo === 'PUT'){
-                 alert('Localização salva com sucesso!');
-             }
-            if (response.ok && metodo==="POST") {
+           
+            if (response.ok ) {
                 alert('Localização salva com sucesso!');
                 location.reload();
             }
              else {
-                alert('Erro ao salvar localização.');
+                alert('Erro ao salvar localização 1.');
             }
         
         console.log(lat, lng, dados)
@@ -325,7 +323,7 @@ let urlPost = 'http://localhost:3000/api/imoveis'
 
 
 // Evento para capturar a posição final do marcador após ser movido
-marker.on('click', () => {
+marker.on('click',async() => {
 
     console.log("cliquei")
     const position = marker.getLatLng(); // Obtem a posição atual do marcador
@@ -343,7 +341,7 @@ marker.on('click', () => {
     }
     else{
         alert("Deseja salvar nessa Localização?")
-        saveLocation(position.lat, position.lng, dados,metodo,urlPost);
+        await saveLocation(position.lat, position.lng, dados,metodo,urlPost);
         // Recarregar a página
         location.reload()
        
@@ -359,15 +357,14 @@ document.getElementById('search-btn').addEventListener('click', async () => {
         `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json`
     );
     const data = await response.json();
-
+    console.log(data, "data")
     if (data.length > 0) {
-        const { lat, lon, display_name } = data[0];
+        const { lat, lon, display_name } = await data[0];
         map.setView([lat, lon], 15); // Centralizar no resultado
         marker.setLatLng([lat, lon]); // Atualizar posição do marcador
         marker.bindPopup(display_name).openPopup();
         //testando info
-        let p = {nome:"Luciana", contato: "8018081", desc: "Aluga-se casa"}
-        marker.bindPopup("Luciana, contato: 8282882").openPopup(AnimationEvent)
+       
     } else {
         alert('Localização não encontrada.');
     }

@@ -28,7 +28,7 @@ constructor(){}
             await prisma.$disconnect();
         }
     }
-    async delatarImovel(id){
+    async deletarImovel(id){
         try {
             const res = await prisma.imovel.delete({where:{id:id}})
             return res

@@ -7,7 +7,7 @@ export default class DeletarImovelController{
             
             console.log(id, "id no controller")
             const imovel = new Imovel()
-            const imovelDeletado = await imovel.delatarImovel(id)
+            const imovelDeletado = await imovel.deletarImovel(id)
            
             res.status(200).json(imovelDeletado)
          } catch (error) {
