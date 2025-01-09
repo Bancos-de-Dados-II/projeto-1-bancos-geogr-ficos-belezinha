@@ -64,7 +64,7 @@ async function loadLocations() {
                 <p><strong>Contato:</strong> ${contato}</p>
                 <button onclick="editLocation(${location.id})">Editar</button>
                 <button onclick="deleteLocation(${location.id})">Excluir</button>
-                <p>${location.id}</p>
+               
             `;
             marker.bindPopup(popupContent);
         });

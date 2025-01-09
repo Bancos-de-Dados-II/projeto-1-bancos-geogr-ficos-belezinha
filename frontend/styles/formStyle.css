@@ -54,8 +54,10 @@
     outline: none;
 }
 
-.btn-submit {
+.btn-submit, .btn-submit2 { 
     width: 100%;
+    display:flex;
+    justify-content:center;
     padding: 10px;
     background-color: #007bff;
     color: #fff;
