@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import ImovelController from '../controllers/ImovelController.js';
 import BuscarImovelController from '../controllers/BuscarImovelController.js';
-import DeletarImovelController from '../controllers/DeletarImovelController.js';
 import EditarImovelController from "../controllers/EditarImovelController.js";
+import DeletarImovelController from "../controllers/DeletarImovelController.js"
 const router = Router();
 
 router.post('/', ImovelController.criarImovel);

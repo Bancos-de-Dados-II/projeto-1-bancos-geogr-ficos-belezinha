@@ -1,10 +1,23 @@
+body{
+   margin: 0;
+   font: 1em sans-serif;
+   height: 100%;
+   font: 1em sans-serif;
+   width:100%;
+   
+}
+
+
+
+
+
 .div-map .buscar-localizacao{
  padding-bottom: 10px;    
 }
 
 #map {
     height: 800px;
-     width: 1500px;
+     width: 1370px;
    }
 .div-map{
    display: flex;
@@ -13,12 +26,21 @@
    height: 80%;
    justify-content: center;
    align-items: center;
+   background-color: #e9e9e9;
 }
 .container{
    width: 100%;
    height: 100%;
    display: flex;
+   
 }
+/* .content{
+   width: 100%;
+   height: 100%;
+   display: flex;
+   flex-direction: column;
+   align-items: end:
+} */
 .btn-submit2{
    display: none;
 }
@@ -29,7 +51,4 @@
   display: none; 
 }
 
-body{
-   height: 100%;
-   
-}
+
