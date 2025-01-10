@@ -372,6 +372,7 @@ marker.on("click", async () => {
 // Botão de busca por endereço
 document.getElementById("search-btn").addEventListener("click", async () => {
   const query = document.getElementById("search").value;
+  const searchbtn = document.getElementById("search");
   const response = await fetch(
     `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
       query
@@ -381,11 +382,17 @@ document.getElementById("search-btn").addEventListener("click", async () => {
   console.log(data, "data");
   if (data.length > 0) {
     const { lat, lon, display_name } = await data[0];
-    map.setView([lat, lon], 15); // Centralizar no resultado
+    map.setView([lat, lon], 11); // Centralizar no resultado
     marker.setLatLng([lat, lon]); // Atualizar posição do marcador
-    marker.bindPopup(display_name).openPopup();
+    // marker.bindPopup(display_name).openPopup();
     //testando info
   } else {
     alert("Localização não encontrada.");
   }
+  // Rolando a página até o mapa
+  document.querySelector("#map").scrollIntoView({
+    behavior: "smooth", // Adiciona uma animação suave
+    
+  });
+  searchbtn.value = "";
 });

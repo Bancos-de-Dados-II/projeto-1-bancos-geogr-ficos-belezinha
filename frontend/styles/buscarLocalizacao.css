@@ -1,36 +1,39 @@
 .buscar-localizacao {
     display: flex;
     height: 130px;
-    width: 100%;
     justify-content: center;
     align-items: center;
     gap: 10px;
-    box-shadow:0 4px 6px rgba(0, 0, 0, 0.1) ;
+    margin-top: 10px;
+    margin-left: 40px;
   }
-  .buscar-localizacao,
+  /* .buscar-localizacao,
   h4 {
     font-weight: bold;
     font-size: x-large;
     color: #353535;
-  }
+  } */
   #search {
-    border: none;
+    border: 1px solid #ddd;
     border-radius: 4px;
     outline: none;
-    height: 50px;
-    width: 400px;
+    height: 30px;
+    width: 340px;
+    padding: 10px;
+    margin-top: 44px;
    
   }
- =
+ 
   #search-btn {
-    height: 50px;
-    width: 100px;
+    height: 30px;
+    width: 60px;
     padding: 4px;
     background-color: #007bff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     color: white;
+    margin-top: 50px;
   }
   #search-btn:hover {
     background-color: #008bff;
