@@ -21,6 +21,13 @@ let marker = L.marker(center, {
   icon: myIcon,
 }).addTo(map);
 
+// Atualiza a posição do mapa e do marcador com base na localização do dispositivo
+map.locate();
+map.on('locationfound', e => {
+    map.panTo(e.latlng);
+    marker.setLatLng(e.latlng);
+});
+
 //load icones
 async function loadLocations() {
   try {
