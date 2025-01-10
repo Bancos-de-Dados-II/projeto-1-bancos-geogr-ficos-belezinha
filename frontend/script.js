@@ -26,13 +26,16 @@ async function loadLocations() {
   try {
     const response = await fetch("http://localhost:3000/api/imoveis");
 
-    console.log(response);
+    console.log(response, "Respónse");
     const locations = await response.json();
-
+    console.log(locations)
+ console.log(locations[0].cordenadas.coordinates[0]
+  , "location ")
     // Adiciona um marcador para cada localização
     locations.forEach((location) => {
-      const { latitude, longitude, titulo, nome, descricao, contato, valor } =
+      const {  titulo, nome, descricao, contato, valor, cordenadas } =
         location;
+        const[longitude , latitude] = cordenadas.coordinates;
       console.log(location.id, "id no map");
       // Cria o marcador
       const marker = L.marker([latitude, longitude], {
@@ -83,6 +86,9 @@ loadLocations();
 // Função para editar a localização
 const btnEdite = document.querySelector(".btn-submit2");
 const btnSubmit = document.querySelector(".btn-submit");
+
+
+
 async function editLocation(id) {
   try {
     // Buscar os dados do imóvel atual
@@ -93,8 +99,14 @@ async function editLocation(id) {
     console.log("editlocation");
     const response = await fetch(`http://localhost:3000/api/imoveis`);
     const locations = await response.json();
-    const imovel = locations.find((location) => location.id === id);
 
+    console.log(locations,"location")
+
+
+    const imovel = locations.find((location) => location.id === id);
+    console.log(imovel, "imovel")
+    const{cordenadas} = imovel
+    const[longitude , latitude] = cordenadas.coordinates;
     if (!imovel) {
       alert("Imóvel não encontrado!");
       return;
@@ -123,6 +135,7 @@ async function editLocation(id) {
       const contato = document.getElementById("contato").value;
 
       const data = {
+       
         titulo,
         nome,
         descricao,
@@ -130,10 +143,12 @@ async function editLocation(id) {
         contato,
       };
 
+
+        console.log(data,"data")
       alert("Formulário enviado com sucesso!");
       alert("Escolha a Localizacao Do imovel no map e clique para salvar");
 
-      const tempMarker = L.marker([imovel.latitude, imovel.longitude], {
+      const tempMarker = L.marker([latitude,longitude], {
         draggable: true,
         icon: L.icon({
           iconUrl: "./img/home-address.png",
@@ -169,13 +184,18 @@ async function editLocation(id) {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
+              titulo,
+              nome,
+              descricao,
+              valor,
+              contato,
               latitude: position.lat,
               longitude: position.lng,
-              data,
+              
             }),
           }
         );
-
+  console.log(responseUpdate, "Response update")
         if (!responseUpdate.ok) {
           alert("Erro ao atualizar imóvel.");
           return;
@@ -185,16 +205,10 @@ async function editLocation(id) {
         await loadLocations();
         location.reload();
 
-        //    deleteLocation(idDelete)
-        // Recarregar a página
-
-        //pegando a latitude e longitude e jogando no campo do form
-        // const latitude = document.getElementById('latitude').value = position.lat;
-        // const longitude = document.getElementById('longitude').value = position.lng;
-        // console.log(latitude, longitude)
+      
       });
 
-      // location.reload();
+      
     });
   } catch (error) {
     console.error("Erro ao editar imóvel:", error);

@@ -1,56 +1,37 @@
-import {  PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient()
+import sequelize from "../database/sequelize.js";
+import { DataTypes } from "sequelize";
 
-export default class Imovel{
+const Imovel = sequelize.define('imovel', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  titulo: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  nome: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  descricao: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
+ valor: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+  },
+  contato: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  cordenadas: {
+    type: DataTypes.GEOMETRY('POINT'), // Suporte a dados geoespaciais
+    allowNull: false,
+  },
+});
 
-constructor(){}
-    
-    async criarImovel(data){
-        
-        try {
-            const res = await prisma.imovel.create({ data });
-            return res;
-        } catch (error) {
-            console.error("Erro ao criar imóvel:", error);
-            throw error;
-        } finally {
-            await prisma.$disconnect();
-        }
-    }
-    async buscarImoveis(){
-        try {
-            const res = await prisma.imovel.findMany();
-            return res;
-        } catch (error) {
-            console.error("Erro ao criar imóvel:", error);
-            throw error;
-        } finally {
-            await prisma.$disconnect();
-        }
-    }
-    async deletarImovel(id){
-        try {
-            const res = await prisma.imovel.delete({where:{id:id}})
-            return res
-        } catch (error) {
-            console.error("Erro ao criar imóvel:", error);
-            throw error;
-        }
-    }
-
-    async editarImovel(id, data) {
-        try {
-            const res = await prisma.imovel.update({
-                where: { id },
-                data,
-            });
-            return res;
-        } catch (error) {
-            console.error("Erro ao editar imóvel:", error);
-            throw error;
-        } finally {
-            await prisma.$disconnect();
-        }
-    }
-    
-}
+Imovel.sync();
+export default Imovel;
