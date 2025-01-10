@@ -10,7 +10,7 @@ L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
 
 // Define o ícone personalizado
 var myIcon = L.icon({
-  iconUrl: "./img/home-address.png",
+  iconUrl: "./img/placeholder.png",
   iconSize: [40, 40],
 });
 
@@ -92,10 +92,16 @@ const btnSubmit = document.querySelector(".btn-submit");
 async function editLocation(id) {
   try {
     // Buscar os dados do imóvel atual
-
+    
+    
     btnEdite.classList.add("flex");
     btnSubmit.classList.add("none");
 
+    // Rolando a página até o formulário
+    document.querySelector(".form-container").scrollIntoView({
+      behavior: "smooth", // Adiciona uma animação suave
+      
+    });
     console.log("editlocation");
     const response = await fetch(`http://localhost:3000/api/imoveis`);
     const locations = await response.json();
